@@ -50,7 +50,7 @@ A API recebe um JWT, faz a validação e retorna informações relevantes como e
 
 ## 🛠 Tecnologias Utilizadas
 
-- **Java 21+**  
+- **Java 17**  
 - **Spring Boot**  
 - **Spring Web (REST)**  
 - **Auth0 Java JWT**  
@@ -144,7 +144,7 @@ O controller depende de uma **abstração**, não da implementação direta.
 Para testar facilmente os endpoints da API, você pode usar a **collection oficial**:
 
 👉 **Postman Collection:**
-[https://web.postman.co/workspace/My-Workspace~2440c7b7-f681-4226-8844-edaaaf68788b/collection/15870896-d4a6aa22-7969-49cc-b247-1b14821a24d5?action=share&source=copy-link&creator=15870896](https://web.postman.co/workspace/My-Workspace~2440c7b7-f681-4226-8844-edaaaf68788b/collection/15870896-d4a6aa22-7969-49cc-b247-1b14821a24d5?action=share&source=copy-link&creator=15870896)
+[[https://web.postman.co/workspace/My-Workspace~2440c7b7-f681-4226-8844-edaaaf68788b/collection/15870896-d4a6aa22-7969-49cc-b247-1b14821a24d5?action=share&source=copy-link&creator=15870896](https://web.postman.co/workspace/My-Workspace~2440c7b7-f681-4226-8844-edaaaf68788b/collection/15870896-d4a6aa22-7969-49cc-b247-1b14821a24d5?action=share&source=copy-link&creator=15870896)](https://app.getpostman.com/join-team?invite_code=bc57156a72378abc3f9820de901ffd8238df3438ee8b462bde8870ad11a2246a)
 
 ### Como importar:
 
