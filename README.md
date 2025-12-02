@@ -104,9 +104,13 @@ A API recebe um JWT, faz a validação e retorna informações relevantes como e
 
 ```json
 {
-  "valid": true,
-  "issuer": "issuer_do_token",
-  "expiresAt": "2025-01-01T12:00:00"
+    "valid": false,
+    "justificativa": "justificativa_sucesso_ou_erro",
+    "claims": {
+        "Role": "External",
+        "Seed": "7840",
+        "Name": "Jorel"
+    }
 }
 ```
 
