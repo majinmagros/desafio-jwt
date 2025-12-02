@@ -167,6 +167,8 @@ Para testar facilmente os endpoints da API, você pode usar a **collection ofici
 * [ ] Testes unitários e integração
 * [ ] Swagger/OpenAPI
 * [ ] Dockerfile + docker-compose
+* [ ] Versionamento de API
+* [ ] Implementação de CI/CD
 
 ---
 
