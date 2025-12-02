@@ -72,7 +72,7 @@ public class JwtValidationServiceImpl implements IJwtValidationService {
         }
 
         Map<String, ?> claims = jwt.getClaims();
-        if (claims.size() != 3) {
+        if (claims.size() != 3 && claims.size() > 3 ) {
             throw error(MessagesCode.INVALID_CLAIM_COUNT);
         }
 
