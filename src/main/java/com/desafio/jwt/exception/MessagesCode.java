@@ -9,8 +9,7 @@ public enum MessagesCode {
     NAME_HAS_DIGITS("jwt.error.name-has-digits"),
     INVALID_ROLE("jwt.error.invalid-role"),
     SEED_NOT_INTEGER("jwt.error.seed-not-integer"),
-    SEED_NOT_PRIME("jwt.error.seed-not-prime"),
-    VALID("jwt.valid");
+    SEED_NOT_PRIME("jwt.error.seed-not-prime");
 
     private final String messageKey;
 

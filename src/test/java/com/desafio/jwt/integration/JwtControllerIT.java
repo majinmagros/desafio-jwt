@@ -35,7 +35,8 @@ class JwtControllerIT {
     private final String TOKEN_NAME_TOO_LONG = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiNTg5MSIsIk5hbWUiOiJNYXJpYSBPbGl2aWEgZGEgU2lsdmEgU2FudG9zIE1hY2hhZG8gZSBPbGl2ZWlyYSBkYSBDb3N0YSBQb250ZXMgUGVyZWlyYSBkZSBBbG1laWRhIEN1bmhhIFJvZHJpZ3VlcyBkZSBTb3VzYSBGb250ZXMgTmFzY2ltZW50byBkYSBTaWx2YSBlIFNpbHZhIGRlIE9saXZlaXJhIGRlIFNhbnRhIENydXogZGUgU2FudG8gQW50w7RuaW8gZGUgUOFkdWEgZGUgQXNzaXMgZGUgU2lxdWVpcmEgZGUgTW91cmEgZGUgQWxjw6JudGFyYSBkZSBCYXJyb3MgZGUgTGltYSBkZSBBcmHDuqpvIGRlIENhcnZhbGhvIGRlIEZlcnJlaXJhIGRlIFJpYmFzIGRlIENhc3RybyBkZSBNb250ZWlybyBkZSBGZXJuYW5kZXMgZGUgR29tZXMgZGUgTWFydGlucyBkZSBSYW1vcyBkZSBUZWl4ZWlyYSBkZSBDb3JyZWlhIGRlIE1lbG8gZGUgTG9wZXMgZGUgQ2FydmFsaG8gZGUgTW91cmEgZGEgU2lsdmEgU2FudG9zIE1hY2hhZG8gZSBPbGl2ZWlyYSBkYSBDb3N0YSBQb250ZXMgUGVyZWlyYSBkZSBBbG1laWRhIEN1bmhhIFJvZHJpZ3VlcyBkZSBTb3VzYSBGb250ZXMgTmFzY2ltZW50byBkYSBTaWx2YSBlIFNpbHZhIGRlIE9saXZlaXJhIGRlIFNhbnRhIENydXogZGUgU2FudG8gQW50w7RuaW8gZGUgUOFkdWEgZGUgQXNzaXMgZGUgU2lxdWVpcmEgZGUgTW91cmEgZGUgQWxjw6JudGFyYSBkZSBCYXJyb3MgZGUgTGltYSBkZSBBcmHDuqpvIGRlIENhcnZhbGhvIGRlIEZlcnJlaXJhIGRlIFJpYmFzIGRlIENhc3RybyBkZSBNb250ZWlybyBkZSBGZXJuYW5kZXMgZGUgR29tZXMgZGUgTWFydGlucyBkZSBSYW1vcyBkZSBUZWl4ZWlyYSBkZSBDb3JyZWlhIGRlIE1lbG8gZGUgTG9wZXMgZGUgQ2FydmFsaG8gZGUgTW91cmEifQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
     private final String TOKEN_NAME_HAS_DIGITS = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiODgwMzciLCJOYW1lIjoiTTRyaWEgT2xpdmlhIn0.6YD73XWZYQSSMDf6H0i3-kylz1-TY_Yt6h1cV2Ku-Qs";
     private final String TOKEN_INVALID_ROLE = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiVXNlciIsIlNlZWQiOiIxNDYyNyIsIk5hbWUiOiJJcm1hbyBkbyBKb3JlbCJ9.ZHVtbXk";
-
+    private final String TOKEN_NOT_INTEGER = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJTZWVkIjoiMTQ2MjcuOCIsIk5hbWUiOiJTdGV2ZSBNYWdhbCJ9.ZHVtbXk";
+    private final String TOKEN_NOT_PRIME = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiNzg0MCIsIk5hbWUiOiJKb3JlbCJ9.KmM7nP2qR5sV8wB1yC4zF6gH9jL3oI0xT2uW5aY7d";
     @Test
     void testEndpointValido() throws Exception {
         Map<String, String> request = new HashMap<>();
@@ -164,7 +165,35 @@ class JwtControllerIT {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk()) // O endpoint retorna 200 mesmo Claim Role inválida. Permitidos: Admin, Member, External.
                 .andExpect(jsonPath("$.valid").value(false))
-                .andExpect(jsonPath("$.justificativa").value("Claim Role inválida. Permitidos: Admin, Member, External.."));
+                .andExpect(jsonPath("$.justificativa").value("Claim Role inválida. Permitidos: Admin, Member, External."));
+
+    }
+
+    @Test
+    void testInvalidNotInteger() throws Exception {
+        Map<String, String> request = new HashMap<>();
+        request.put("token", TOKEN_NOT_INTEGER);
+
+        mockMvc.perform(post("/jwt/validate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk()) // O endpoint retorna 200 mesmo Seed não é um número inteiro válido.
+                .andExpect(jsonPath("$.valid").value(false))
+                .andExpect(jsonPath("$.justificativa").value("Seed não é um número inteiro válido."));
+
+    }
+
+    @Test
+    void testInvalidNotPrime() throws Exception {
+        Map<String, String> request = new HashMap<>();
+        request.put("token", TOKEN_NOT_PRIME);
+
+        mockMvc.perform(post("/jwt/validate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk()) // O endpoint retorna 200 mesmo Seed não é um número inteiro válido.
+                .andExpect(jsonPath("$.valid").value(false))
+                .andExpect(jsonPath("$.justificativa").value("Seed não é um número primo."));
 
     }
 }

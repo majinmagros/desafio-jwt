@@ -43,7 +43,8 @@ class JwtValidationServiceImplTest {
     private final String TOKEN_TOO_LONG = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiNTg5MSIsIk5hbWUiOiJNYXJpYSBPbGl2aWEgZGEgU2lsdmEgU2FudG9zIE1hY2hhZG8gZSBPbGl2ZWlyYSBkYSBDb3N0YSBQb250ZXMgUGVyZWlyYSBkZSBBbG1laWRhIEN1bmhhIFJvZHJpZ3VlcyBkZSBTb3VzYSBGb250ZXMgTmFzY2ltZW50byBkYSBTaWx2YSBlIFNpbHZhIGRlIE9saXZlaXJhIGRlIFNhbnRhIENydXogZGUgU2FudG8gQW50w7RuaW8gZGUgUOFkdWEgZGUgQXNzaXMgZGUgU2lxdWVpcmEgZGUgTW91cmEgZGUgQWxjw6JudGFyYSBkZSBCYXJyb3MgZGUgTGltYSBkZSBBcmHDuqpvIGRlIENhcnZhbGhvIGRlIEZlcnJlaXJhIGRlIFJpYmFzIGRlIENhc3RybyBkZSBNb250ZWlybyBkZSBGZXJuYW5kZXMgZGUgR29tZXMgZGUgTWFydGlucyBkZSBSYW1vcyBkZSBUZWl4ZWlyYSBkZSBDb3JyZWlhIGRlIE1lbG8gZGUgTG9wZXMgZGUgQ2FydmFsaG8gZGUgTW91cmEgZGEgU2lsdmEgU2FudG9zIE1hY2hhZG8gZSBPbGl2ZWlyYSBkYSBDb3N0YSBQb250ZXMgUGVyZWlyYSBkZSBBbG1laWRhIEN1bmhhIFJvZHJpZ3VlcyBkZSBTb3VzYSBGb250ZXMgTmFzY2ltZW50byBkYSBTaWx2YSBlIFNpbHZhIGRlIE9saXZlaXJhIGRlIFNhbnRhIENydXogZGUgU2FudG8gQW50w7RuaW8gZGUgUOFkdWEgZGUgQXNzaXMgZGUgU2lxdWVpcmEgZGUgTW91cmEgZGUgQWxjw6JudGFyYSBkZSBCYXJyb3MgZGUgTGltYSBkZSBBcmHDuqpvIGRlIENhcnZhbGhvIGRlIEZlcnJlaXJhIGRlIFJpYmFzIGRlIENhc3RybyBkZSBNb250ZWlybyBkZSBGZXJuYW5kZXMgZGUgR29tZXMgZGUgTWFydGlucyBkZSBSYW1vcyBkZSBUZWl4ZWlyYSBkZSBDb3JyZWlhIGRlIE1lbG8gZGUgTG9wZXMgZGUgQ2FydmFsaG8gZGUgTW91cmEifQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
     private final String TOKEN_NAME_HAS_DIGITS = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiODgwMzciLCJOYW1lIjoiTTRyaWEgT2xpdmlhIn0.6YD73XWZYQSSMDf6H0i3-kylz1-TY_Yt6h1cV2Ku-Qs";
     private final String TOKEN_INVALID_ROLE = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiVXNlciIsIlNlZWQiOiIxNDYyNyIsIk5hbWUiOiJJcm1hbyBkbyBKb3JlbCJ9.ZHVtbXk";
-
+    private final String TOKEN_NOT_PRIME = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiNzg0MCIsIk5hbWUiOiJKb3JlbCJ9.KmM7nP2qR5sV8wB1yC4zF6gH9jL3oI0xT2uW5aY7d";
+    private final String TOKEN_NOT_INTEGER = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJTZWVkIjoiMTQ2MjcuOCIsIk5hbWUiOiJTdGV2ZSBNYWdhbCJ9.ZHVtbXk";
 
     @BeforeEach
     void setup() {
@@ -60,10 +61,12 @@ class JwtValidationServiceImplTest {
                 .thenReturn("Alguma claim obrigatória está ausente: Name, Role ou Seed.");
         when(messageSource.getMessage(eq("jwt.error.name-too-long"), any(), any(Locale.class)))
                 .thenReturn("Claim Name excede 256 caracteres.");
-        when(messageSource.getMessage(eq("jwt.valid"), any(), any(Locale.class)))
-                .thenReturn("Token válido.");
         when(messageSource.getMessage(eq("jwt.error.invalid-role"), any(), any(Locale.class)))
                 .thenReturn("Claim Role inválida. Permitidos: Admin, Member, External.");
+        when(messageSource.getMessage(eq("jwt.error.seed-not-integer"), any(), any(Locale.class)))
+                .thenReturn("Seed não é um número inteiro válido.");
+        when(messageSource.getMessage(eq("jwt.error.seed-not-prime"), any(), any(Locale.class)))
+                .thenReturn("Seed não é um número primo.");
 
     }
 
@@ -159,6 +162,22 @@ class JwtValidationServiceImplTest {
 
         assertFalse(response.isValid());
         assertEquals("Claim Role inválida. Permitidos: Admin, Member, External.", response.getJustificativa());
+    }
+
+    @Test
+    void testNotPrime() {
+        JwtResponseDTO response = jwtValidationService.validateToken(TOKEN_NOT_PRIME);
+
+        assertFalse(response.isValid());
+        assertEquals("Seed não é um número primo.", response.getJustificativa());
+    }
+
+    @Test
+    void testNotInteger() {
+        JwtResponseDTO response = jwtValidationService.validateToken(TOKEN_NOT_INTEGER);
+
+        assertFalse(response.isValid());
+        assertEquals("Seed não é um número inteiro válido.", response.getJustificativa());
     }
 
 }
