@@ -1,7 +1,9 @@
 package com.desafio.jwt.integration;
 
 import com.desafio.jwt.JwtApplication;
+import com.desafio.jwt.constants.ConstantsTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,22 +27,11 @@ class JwtControllerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final String TOKEN_CASO1 = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJTZWVkIjoiNzg0MSIsIk5hbWUiOiJUb25pbmhvIEFyYXVqbyJ9.QY05sIjtrcJnP533kQNk8QXcaleJ1Q01jWY_ZzIZuAg";
-    private final String TOKEN_CASO2 = "eyJhbGciOiJzI1NiJ9.dfsdfsfryJSr2xrIjoiQWRtaW4iLCJTZrkIjoiNzg0MSIsIk5hbrUiOiJUb25pbmhvIEFyYXVqbyJ9.QY05fsdfsIjtrcJnP533kQNk8QXcaleJ1Q01jWY_ZzIZuAg";
-    private final String TOKEN_CASO3 = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiODgwMzciLCJOYW1lIjoiTTRyaWEgT2xpdmlhIn0.6YD73XWZYQSSMDf6H0i3-kylz1-TY_Yt6h1cV2Ku-Qs";
-    private final String TOKEN_CASO4 = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiTWVtYmVyIiwiT3JnIjoiQlIiLCJTZWVkIjoiMTQ2MjciLCJOYW1lIjoiVmFsZGlyIEFyYW5oYSJ9.cmrXV_Flm5mfdpfNUVopY_I2zeJUy4EZ4i3Fea98zvY";
-   // Tokens adicionais
-    private final String TOKEN_DIF_3 =  "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJOYW1lIjoiSm9yZWwifQ.XXX";
-    private final String TOKEN_MISSING_CLAIMS = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJSb2xlIjoiQWRtaW4iLCJTZWVkIjpudWxsLCJOYW1lIjoiSm9hbyBkYSBTaWx2YSJ9.pY3w2qLmX8rB6zV9nT0yS1R4U5I7O2P9Q1W4E6A8C3B";
-    private final String TOKEN_NAME_TOO_LONG = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiNTg5MSIsIk5hbWUiOiJNYXJpYSBPbGl2aWEgZGEgU2lsdmEgU2FudG9zIE1hY2hhZG8gZSBPbGl2ZWlyYSBkYSBDb3N0YSBQb250ZXMgUGVyZWlyYSBkZSBBbG1laWRhIEN1bmhhIFJvZHJpZ3VlcyBkZSBTb3VzYSBGb250ZXMgTmFzY2ltZW50byBkYSBTaWx2YSBlIFNpbHZhIGRlIE9saXZlaXJhIGRlIFNhbnRhIENydXogZGUgU2FudG8gQW50w7RuaW8gZGUgUOFkdWEgZGUgQXNzaXMgZGUgU2lxdWVpcmEgZGUgTW91cmEgZGUgQWxjw6JudGFyYSBkZSBCYXJyb3MgZGUgTGltYSBkZSBBcmHDuqpvIGRlIENhcnZhbGhvIGRlIEZlcnJlaXJhIGRlIFJpYmFzIGRlIENhc3RybyBkZSBNb250ZWlybyBkZSBGZXJuYW5kZXMgZGUgR29tZXMgZGUgTWFydGlucyBkZSBSYW1vcyBkZSBUZWl4ZWlyYSBkZSBDb3JyZWlhIGRlIE1lbG8gZGUgTG9wZXMgZGUgQ2FydmFsaG8gZGUgTW91cmEgZGEgU2lsdmEgU2FudG9zIE1hY2hhZG8gZSBPbGl2ZWlyYSBkYSBDb3N0YSBQb250ZXMgUGVyZWlyYSBkZSBBbG1laWRhIEN1bmhhIFJvZHJpZ3VlcyBkZSBTb3VzYSBGb250ZXMgTmFzY2ltZW50byBkYSBTaWx2YSBlIFNpbHZhIGRlIE9saXZlaXJhIGRlIFNhbnRhIENydXogZGUgU2FudG8gQW50w7RuaW8gZGUgUOFkdWEgZGUgQXNzaXMgZGUgU2lxdWVpcmEgZGUgTW91cmEgZGUgQWxjw6JudGFyYSBkZSBCYXJyb3MgZGUgTGltYSBkZSBBcmHDuqpvIGRlIENhcnZhbGhvIGRlIEZlcnJlaXJhIGRlIFJpYmFzIGRlIENhc3RybyBkZSBNb250ZWlybyBkZSBGZXJuYW5kZXMgZGUgR29tZXMgZGUgTWFydGlucyBkZSBSYW1vcyBkZSBUZWl4ZWlyYSBkZSBDb3JyZWlhIGRlIE1lbG8gZGUgTG9wZXMgZGUgQ2FydmFsaG8gZGUgTW91cmEifQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-    private final String TOKEN_NAME_HAS_DIGITS = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiODgwMzciLCJOYW1lIjoiTTRyaWEgT2xpdmlhIn0.6YD73XWZYQSSMDf6H0i3-kylz1-TY_Yt6h1cV2Ku-Qs";
-    private final String TOKEN_INVALID_ROLE = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiVXNlciIsIlNlZWQiOiIxNDYyNyIsIk5hbWUiOiJJcm1hbyBkbyBKb3JlbCJ9.ZHVtbXk";
-    private final String TOKEN_NOT_INTEGER = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJTZWVkIjoiMTQ2MjcuOCIsIk5hbWUiOiJTdGV2ZSBNYWdhbCJ9.ZHVtbXk";
-    private final String TOKEN_NOT_PRIME = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJSb2xlIjoiRXh0ZXJuYWwiLCJTZWVkIjoiNzg0MCIsIk5hbWUiOiJKb3JlbCJ9.KmM7nP2qR5sV8wB1yC4zF6gH9jL3oI0xT2uW5aY7d";
     @Test
-    void testEndpointValido() throws Exception {
+    @DisplayName("200 OK e válido quando o token possui claims esperados")
+    void shouldReturnValidResponseWhenTokenIsValid() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_CASO1);
+        request.put("token", ConstantsTest.TOKEN_CASO1);
 
         mockMvc.perform(post("/jwt/validate")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -52,9 +43,10 @@ class JwtControllerIT {
     }
 
     @Test
-    void testEndpointInvalido() throws Exception {
+    @DisplayName("200 OK e inválido quando o claim Name possui caracteres numéricos (caso 3)")
+    void shouldReturnInvalidWhenNameContainsDigitsCase3() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_CASO3);
+        request.put("token",  ConstantsTest.TOKEN_CASO3);
 
         mockMvc.perform(post("/jwt/validate")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -66,9 +58,10 @@ class JwtControllerIT {
     }
 
     @Test
-    void testEndpointJWTInvalido() throws Exception {
+    @DisplayName("200 OK e inválido quando o JWT é malformado")
+    void shouldReturnInvalidWhenJwtIsMalformed() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_CASO2);
+        request.put("token", ConstantsTest.TOKEN_CASO2);
 
         mockMvc.perform(post("/jwt/validate")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +72,8 @@ class JwtControllerIT {
     }
 
     @Test
-    void testEndpointTokenVazio() throws Exception {
+    @DisplayName("200 OK e inválido quando o token está vazio")
+    void shouldReturnInvalidWhenTokenIsEmpty() throws Exception {
         Map<String, String> request = new HashMap<>();
         request.put("token", "");
 
@@ -92,9 +86,10 @@ class JwtControllerIT {
     }
 
     @Test
-    void testEndpointMore3Claims() throws Exception {
+    @DisplayName("200 OK e inválido quando existem mais de 3 claims")
+    void shouldReturnInvalidWhenMoreThanThreeClaims() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_CASO4);
+        request.put("token", ConstantsTest.TOKEN_CASO4);
 
         mockMvc.perform(post("/jwt/validate")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -105,9 +100,10 @@ class JwtControllerIT {
 
     }
     @Test
-    void testEndpointDif3() throws Exception {
+    @DisplayName("200 OK e inválido quando o número de claims é diferente de 3")
+    void shouldReturnInvalidWhenClaimsCountIsDifferentFromThree() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_DIF_3);
+        request.put("token", ConstantsTest.TOKEN_DIF_3);
 
         mockMvc.perform(post("/jwt/validate")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -117,22 +113,24 @@ class JwtControllerIT {
                 .andExpect(jsonPath("$.justificativa").value("Alguma claim obrigatória está ausente: Name, Role ou Seed."));
     }
     @Test
-    void testEndpointMissing_Claims() throws Exception {
+    @DisplayName("200 OK e inválido quando falta claim obrigatória (Name, Role ou Seed)")
+    void shouldReturnInvalidWhenRequiredClaimMissing() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_MISSING_CLAIMS);
+        request.put("token", ConstantsTest.TOKEN_MISSING_CLAIMS);
 
         mockMvc.perform(post("/jwt/validate")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
-                    .andExpect(status().isOk()) // O endpoint retorna 200 mesmo Alguma claim obrigatória está ausente: Name, Role ou Seed
-                    .andExpect(jsonPath("$.valid").value(false))
-                    .andExpect(jsonPath("$.justificativa").value("Alguma claim obrigatória está ausente: Name, Role ou Seed."));
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk()) // O endpoint retorna 200 mesmo Alguma claim obrigatória está ausente: Name, Role ou Seed
+                .andExpect(jsonPath("$.valid").value(false))
+                .andExpect(jsonPath("$.justificativa").value("Alguma claim obrigatória está ausente: Name, Role ou Seed."));
 
     }
     @Test
-    void testEndpointToo_Long() throws Exception {
+    @DisplayName("200 OK e inválido quando o claim Name excede 256 caracteres")
+    void shouldReturnInvalidWhenNameExceedsMaxLength() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_NAME_TOO_LONG);
+        request.put("token", ConstantsTest.TOKEN_NAME_TOO_LONG);
 
         mockMvc.perform(post("/jwt/validate")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -143,9 +141,10 @@ class JwtControllerIT {
 
     }
     @Test
-    void testName_Has_Digit() throws Exception {
+    @DisplayName("200 OK e inválido quando o claim Name contém dígitos")
+    void shouldReturnInvalidWhenNameContainsDigits() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_NAME_HAS_DIGITS);
+        request.put("token", ConstantsTest.TOKEN_NAME_HAS_DIGITS);
 
         mockMvc.perform(post("/jwt/validate")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -156,9 +155,10 @@ class JwtControllerIT {
 
     }
     @Test
-    void testInvalid_Role() throws Exception {
+    @DisplayName("200 OK e inválido quando o claim Role é inválido")
+    void shouldReturnInvalidWhenRoleIsInvalid() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_INVALID_ROLE);
+        request.put("token", ConstantsTest.TOKEN_INVALID_ROLE);
 
         mockMvc.perform(post("/jwt/validate")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -170,9 +170,10 @@ class JwtControllerIT {
     }
 
     @Test
-    void testInvalidNotInteger() throws Exception {
+    @DisplayName("200 OK e inválido quando Seed não é um inteiro válido")
+    void shouldReturnInvalidWhenSeedIsNotInteger() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_NOT_INTEGER);
+        request.put("token", ConstantsTest.TOKEN_NOT_INTEGER);
 
         mockMvc.perform(post("/jwt/validate")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -184,9 +185,10 @@ class JwtControllerIT {
     }
 
     @Test
-    void testInvalidNotPrime() throws Exception {
+    @DisplayName("200 OK e inválido quando Seed não é um número primo")
+    void shouldReturnInvalidWhenSeedIsNotPrime() throws Exception {
         Map<String, String> request = new HashMap<>();
-        request.put("token", TOKEN_NOT_PRIME);
+        request.put("token", ConstantsTest.TOKEN_NOT_PRIME);
 
         mockMvc.perform(post("/jwt/validate")
                         .contentType(MediaType.APPLICATION_JSON)
