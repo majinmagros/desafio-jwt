@@ -50,7 +50,7 @@ A API recebe um JWT, faz a validação e retorna informações relevantes como e
 
 ## 🛠 Tecnologias Utilizadas
 
-- **Java 21+**  
+- **Java 17**  
 - **Spring Boot**  
 - **Spring Web (REST)**  
 - **Auth0 Java JWT**  
