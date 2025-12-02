@@ -58,7 +58,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testCaso1_TokenValido() {
+    void givenValidToken_whenValidate_thenShouldReturnValidResponseAndAdminRole() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_CASO1);
 
         assertTrue(response.isValid());
@@ -69,7 +69,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testCaso2_TokenInvalidoFormato() {
+    void givenTokenWithInvalidFormat_whenValidate_thenShouldReturnInvalidResponseAndInvalidJwtJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_CASO2);
 
         assertFalse(response.isValid());
@@ -77,7 +77,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testCaso3_TokenComNomeInvalido() {
+    void givenTokenWithInvalidNameDigit_whenValidate_thenShouldReturnInvalidResponseButKeepClaims() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_CASO3);
 
         assertFalse(response.isValid());
@@ -87,7 +87,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testCaso4_TokenComMaisDe3Claims() {
+    void givenTokenWithMoreThanThreeClaims_whenValidate_thenShouldReturnInvalidResponse() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_CASO4);
 
         assertFalse(response.isValid());
@@ -96,7 +96,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testTokenVazio() {
+    void givenEmptyToken_whenValidate_thenShouldReturnInvalidResponseAndEmptyJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken("");
 
         assertFalse(response.isValid());
@@ -104,7 +104,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testTokenNulo() {
+    void givenNullToken_whenValidate_thenShouldReturnInvalidResponseAndEmptyJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken(null);
 
         assertFalse(response.isValid());
@@ -112,14 +112,16 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testMore3() {
+    void givenTokenWithMoreThanThreeClaims_whenValidate_thenShouldReturnInvalidResponseAndCountJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_MORE_3);
 
         assertFalse(response.isValid());
         assertEquals("Abrindo o JWT, o número de claims é diferente de 3.", response.getJustificativa());
     }
+
+    // Este teste parece ser redundante com o testMissingClaims, mas padronizado por precaução
     @Test
-    void testDif3() {
+    void givenTokenWithDifferentClaimCountThanThree_whenValidate_thenShouldReturnInvalidResponseAndMissingClaimsJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_DIF_3);
 
         assertFalse(response.isValid());
@@ -127,7 +129,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testMissingClaims() {
+    void givenTokenWithMissingRequiredClaims_whenValidate_thenShouldReturnInvalidResponseAndMissingClaimsJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_MISSING_CLAIMS);
 
         assertFalse(response.isValid());
@@ -135,7 +137,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testTooLong() {
+    void givenTokenWithNameClaimTooLong_whenValidate_thenShouldReturnInvalidResponseAndTooLongJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_NAME_TOO_LONG);
 
         assertFalse(response.isValid());
@@ -143,7 +145,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testNameHasDigit() {
+    void givenTokenWithNameClaimHavingDigits_whenValidate_thenShouldReturnInvalidResponseAndDigitJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_NAME_HAS_DIGITS);
 
         assertFalse(response.isValid());
@@ -151,7 +153,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testInvalidRole() {
+    void givenTokenWithInvalidRoleClaim_whenValidate_thenShouldReturnInvalidResponseAndRoleJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_INVALID_ROLE);
 
         assertFalse(response.isValid());
@@ -159,7 +161,7 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testNotPrime() {
+    void givenTokenWithSeedClaimNotPrime_whenValidate_thenShouldReturnInvalidResponseAndNotPrimeJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_NOT_PRIME);
 
         assertFalse(response.isValid());
@@ -167,11 +169,10 @@ class JwtValidationServiceImplTest {
     }
 
     @Test
-    void testNotInteger() {
+    void givenTokenWithSeedClaimNotInteger_whenValidate_thenShouldReturnInvalidResponseAndNotIntegerJustificative() {
         JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_NOT_INTEGER);
 
         assertFalse(response.isValid());
         assertEquals("Seed não é um número inteiro válido.", response.getJustificativa());
     }
-
 }
