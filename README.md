@@ -1,3 +1,7 @@
+
+# ✅ README.md
+
+````markdown
 # 🔐 desafio-jwt
 
 API em **Java + Spring Boot** para **validação de tokens JWT**, criada como desafio técnico e estudo de boas práticas, arquitetura limpa e princípios SOLID.
@@ -6,110 +10,79 @@ API em **Java + Spring Boot** para **validação de tokens JWT**, criada como de
 
 ## 📘 Índice
 
-1. [Sobre o Projeto](#-sobre-o-projeto)
-2. [Objetivo](#-objetivo)
-3. [Tecnologias](#-tecnologias)
-4. [Como Executar](#-como-executar)
-5. [Testes](#-testes)
-6. [Endpoints](#-endpoints)
-7. [Contrato de Resposta (schema)](#-contrato-de-resposta-schema)
-8. [Mensagens/Justificativas esperadas (testes)](#-mensagensjustificativas-esperadas-testes)
-9. [Postman / testes manuais](#-postman--testes-manuais)
-10. [Arquitetura & SOLID](#-arquitetura--solid)
-11. [Melhorias Futuras](#-melhorias-futuras)
-12. [Como Contribuir](#-como-contribuir)
-13. [Autor](#-autor)
-14. [Licença](#-licença)
+1. [Sobre o Projeto](#-sobre-o-projeto)  
+2. [Objetivo](#-objetivo)  
+3. [Tecnologias](#-tecnologias)  
+4. [Como Executar](#-como-executar)  
+5. [Endpoints](#-endpoints)  
+6. [Arquitetura & SOLID](#-arquitetura--solid)  
+7. [Collection do Postman](#-collection-do-postman)  
+8. [Melhorias Futuras](#-melhorias-futuras)  
+9. [Contribuição](#-como-contribuir)  
+10. [Autor](#-autor)  
+11. [Licença](#-licença)
 
 ---
 
 ## 🔍 Sobre o Projeto
 
-Este repositório contém uma API simples e modular voltada à **validação de tokens JWT (JSON Web Token)**. A API recebe um JWT via POST, aplica uma série de validações nas claims esperadas e retorna um objeto com o resultado da validação e uma justificativa textual.
+Este repositório contém uma API simples e modular voltada à **validação de tokens JWT (JSON Web Token)**.  
 
-O projeto foi feito para demonstrar:
-- Boas práticas de arquitetura e organização de código
-- Injeção de dependências e separação de responsabilidades
-- Aplicação de princípios SOLID
-- Testes de integração cobrindo os principais cenários de validação
+Serve como base para demonstrar:
+
+- Boas práticas de arquitetura  
+- Baixo acoplamento  
+- Alto nível de coesão  
+- Extensibilidade  
+- Aplicação de princípios SOLID  
+
+A API recebe um JWT, faz a validação e retorna informações relevantes como emissor e data de expiração.
 
 ---
 
 ## 🎯 Objetivo
 
-- Validar tokens JWT com regras claras (presença de claims, tipos, limites de tamanho e regras de negócio específicas, como se a seed é primo).
-- Devolver um resultado uniforme com campo booleano `valid` e campo `justificativa` descrevendo o porquê da validação.
-- Fornecer exemplos e suíte de testes automatizados (integração).
+- Validar tokens JWT com segurança e clareza.  
+- Demonstrar um design limpo e bem abstraído.  
+- Servir como ponto de partida para sistemas maiores que utilizem autenticação com JWT.  
 
 ---
 
 ## 🛠 Tecnologias Utilizadas
 
-- Java 17
-- Spring Boot
-- Spring Web (REST)
-- Auth0 Java JWT (ou biblioteca similar, conforme pom.xml)
-- Maven (com Maven Wrapper incluído: `mvnw`)
+- **Java 21+**  
+- **Spring Boot**  
+- **Spring Web (REST)**  
+- **Auth0 Java JWT**  
+- **Maven**
 
 ---
 
 ## 🚀 Como Executar
 
-Recomendamos usar o Maven Wrapper fornecido no projeto para garantir a versão do Maven:
-
 1. Clone o repositório:
-```bash
-git clone https://github.com/majinmagros/desafio-jwt.git
-```
+   ```bash
+   git clone https://github.com/majinmagros/desafio-jwt.git
+````
 
 2. Acesse o projeto:
-```bash
-cd desafio-jwt
-```
 
-3. Build e execução:
-```bash
-./mvnw clean install
-./mvnw spring-boot:run
-```
+   ```bash
+   cd desafio-jwt
+   ```
 
-A API ficará disponível em:
-```
-http://localhost:8080
-```
+3. Compile e execute:
 
-> Observação: se preferir usar o Maven instalado localmente:
-> ```bash
-> mvn clean install
-> mvn spring-boot:run
-> ```
+   ```bash
+   mvn clean install
+   mvn spring-boot:run
+   ```
 
----
+4. A API ficará disponível em:
 
-## 🧪 Testes
-
-- Os testes de integração estão em: `src/test/java/com/desafio/jwt/integration/JwtControllerIT.java`
-- Os tokens de exemplo usados nos testes estão centralizados em: `src/test/java/com/desafio/jwt/constants/ConstantsTest.java`
-
-Executar apenas a suíte de integração (classe específica):
-```bash
-./mvnw -Dtest=JwtControllerIT test
-```
-
-Executar toda a suíte de testes:
-```bash
-./mvnw test
-```
-
-Cobertura (sugestão): adicionar JaCoCo ao `pom.xml` e executar:
-```bash
-./mvnw test jacoco:report
-# relatório em target/site/jacoco/index.html
-```
-
-Observações:
-- Testes de integração usam MockMvc para simular requisições HTTP contra o contexto Spring boot.
-- Para tornar testes menos frágeis, mensagens literais retornadas pelo endpoint (campo `justificativa`) estão atreladas a asserts nos testes — ao alterar textos no controller é necessário atualizar os testes.
+   ```
+   http://localhost:8080
+   ```
 
 ---
 
@@ -117,79 +90,24 @@ Observações:
 
 ### ✔️ Validar JWT
 
-- Método: POST
-- URL: `/jwt/validate`
-- Headers: `Content-Type: application/json`
+**POST** `/jwt/validate`
 
-#### Body (exemplo)
+#### Body:
+
 ```json
 {
   "token": "seu_token_jwt_aqui"
 }
 ```
 
-#### Observações sobre códigos HTTP
-- Atualmente o endpoint retorna HTTP 200 OK mesmo quando o token é considerado inválido — o resultado da validação é indicado pelo campo `valid` no corpo da resposta (boolean). Essa decisão arquitetural foi adotada para separar status HTTP (transporte) do resultado lógico da validação; documente se preferir retornar 4xx para tokens inválidos.
+#### Resposta (exemplo):
 
----
-
-## 📦 Contrato de Resposta (schema)
-
-Exemplo de resposta de sucesso/validação (estrutura real usada nos testes):
 ```json
 {
   "valid": true,
-  "justificativa": "Texto explicativo",
-  "claims": {
-    "Role": "Admin",
-    "Name": "Fulano",
-    "Seed": "7841"
-  }
+  "issuer": "issuer_do_token",
+  "expiresAt": "2025-01-01T12:00:00"
 }
-```
-
-Campos:
-- `valid`: boolean — se o token passou nas validações aplicadas.
-- `justificativa`: string — mensagem com a justificativa do resultado (útil para análise humana e debugging).
-- `claims`: objeto — claims extraídas do JWT; as chaves são sensíveis a maiúsculas/minúsculas conforme implementação atual (`Role`, `Name`, `Seed`).
-
----
-
-## 🔎 Mensagens / Justificativas esperadas (cobertas pelos testes)
-
-Os testes verificam mensagens literais no campo `justificativa`. Abaixo estão as mensagens mais relevantes (mantê-las sincronizadas entre controller e testes é importante):
-
-- "Abrindo o JWT, as informações contidas atendem a descrição." — token válido
-- "Abrindo o JWT, a Claim Name possui caracter de números." — Name contém dígitos
-- "JWT invalido." — JWT malformado
-- "Token vazio ou nulo." — token não fornecido
-- "Abrindo o JWT, foi encontrado mais de 3 claims." — mais de 3 claims
-- "Alguma claim obrigatória está ausente: Name, Role ou Seed." — claims obrigatórias ausentes
-- "Claim Name excede 256 caracteres." — Name maior que 256 chars
-- "Claim Role inválida. Permitidos: Admin, Member, External." — Role fora da lista
-- "Seed não é um número inteiro válido." — Seed não é inteiro
-- "Seed não é um número primo." — Seed não é primo
-
-Recomendação: se o campo `justificativa` for consumido programaticamente por clientes, considere adicionar um campo `errorCode` padronizado (enum) para evitar fragilidade por mudanças textuais.
-
----
-
-## 🧾 Postman / testes manuais
-
-A Postman Collection pública para este projeto está disponível aqui:
-
-https://go.postman.co/workspace/My-Workspace~2440c7b7-f681-4226-8844-edaaaf68788b/collection/15870896-d4a6aa22-7969-49cc-b247-1b14821a24d5?action=share&source=copy-link&creator=15870896
-
-Como importar:
-1. Abra o Postman
-2. Clique em "Import"
-3. Cole o link acima e importe
-
-Exemplo `curl`:
-```bash
-curl -X POST http://localhost:8080/jwt/validate \
-  -H "Content-Type: application/json" \
-  -d '{"token":"SEU_TOKEN_AQUI"}'
 ```
 
 ---
@@ -198,24 +116,53 @@ curl -X POST http://localhost:8080/jwt/validate \
 
 O projeto foi estruturado seguindo os princípios:
 
-- Single Responsibility: controllers, services, validators e DTOs têm responsabilidades separadas.
-- Open/Closed: validações podem ser estendidas sem modificar implementações existentes (padrão de estratégia).
-- Liskov Substitution: abstrações/interfaces permitem substituição de implementações.
-- Interface Segregation: interfaces enxutas (por ex., `IJwtValidationService`).
-- Dependency Inversion: controllers dependem de abstrações e recebem implementações via injeção.
+### **S — Single Responsibility**
+
+Cada classe tem uma única responsabilidade:
+Controller, Service, DTO, Validator e Exception são bem separados.
+
+### **O — Open/Closed**
+
+É possível adicionar novos validadores de token sem alterar os existentes.
+
+### **L — Liskov Substitution**
+
+O serviço de validação implementa uma interface, permitindo substituição sem quebrar dependências.
+
+### **I — Interface Segregation**
+
+Interfaces enxutas e específicas (ex.: `IJwtValidationService`).
+
+### **D — Dependency Inversion**
+
+O controller depende de uma **abstração**, não da implementação direta.
 
 ---
 
-## 🔧 Melhorias Futuras (sugestões priorizadas)
+## 📦 Collection do Postman
 
-- [ ] Adicionar OpenAPI / Swagger para documentação dos endpoints.
-- [ ] Adicionar JaCoCo e criar policy de cobertura no CI.
-- [ ] Adicionar GitHub Actions para: build, testes, report de cobertura e análise estática.
-- [ ] Transformar justificativas literais em constantes de resposta ou adicionar `errorCode` para clientes programáticos.
-- [ ] Gerar tokens de teste dinamicamente nos testes (em vez de constantes "hard-coded") — assinar com chave de teste local.
-- [ ] Dockerfile + docker-compose para facilitar deploy/testes locais.
-- [ ] Instrumentação básica de observability (Micrometer + Actuator, logs estruturados, trace id).
-- [ ] Validar e remover tokens sensíveis do histórico (se houver).
+Para testar facilmente os endpoints da API, você pode usar a **collection oficial**:
+
+👉 **Postman Collection:**
+[https://web.postman.co/workspace/My-Workspace~2440c7b7-f681-4226-8844-edaaaf68788b/collection/15870896-d4a6aa22-7969-49cc-b247-1b14821a24d5?action=share&source=copy-link&creator=15870896](https://web.postman.co/workspace/My-Workspace~2440c7b7-f681-4226-8844-edaaaf68788b/collection/15870896-d4a6aa22-7969-49cc-b247-1b14821a24d5?action=share&source=copy-link&creator=15870896)
+
+### Como importar:
+
+1. Abra o Postman
+2. Clique em **Import**
+3. Cole o link acima
+4. Pronto! Já pode testar a requisição `/jwt/validate`
+
+---
+
+## 📚 Melhorias Futuras
+
+* [ ] Endpoint para geração de JWT
+* [ ] Refresh Token
+* [ ] Spring Security completo
+* [ ] Testes unitários e integração
+* [ ] Swagger/OpenAPI
+* [ ] Dockerfile + docker-compose
 
 ---
 
@@ -223,32 +170,38 @@ O projeto foi estruturado seguindo os princípios:
 
 1. Faça um Fork
 2. Crie sua branch:
-```bash
-git checkout -b minha-feature
-```
-3. Commit:
-```bash
-git commit -m "feat: descrição da mudança"
-```
-4. Push:
-```bash
-git push origin minha-feature
-```
-5. Abra um Pull Request
 
-Dica: siga o padrão de commits (conventional commits) para mensagens mais claras.
+   ```bash
+   git checkout -b minha-feature
+   ```
+3. Commit:
+
+   ```bash
+   git commit -m "Minha nova feature"
+   ```
+4. Push:
+
+   ```bash
+   git push origin minha-feature
+   ```
+5. Abra um Pull Request
 
 ---
 
 ## 👤 Autor
 
-**William Batista Gomes**  
-🔗 https://github.com/majinmagros
+**William Batista Gomes**
+🔗 [https://github.com/majinmagros](https://github.com/majinmagros)
 
 ---
 
 ## 📄 Licença
 
-Este projeto está sob licença MIT. Certifique-se de adicionar o arquivo `LICENSE` na raiz com o conteúdo da MIT License se ainda não estiver presente.
+Este projeto está sob licença MIT.
+
+```
 
 ---
+
+<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/9a904afc-81ef-49f7-918a-f0664ef0b0f1" />
+
