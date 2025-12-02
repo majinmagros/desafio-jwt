@@ -113,10 +113,17 @@ class JwtValidationServiceImplTest {
 
     @Test
     void testMore3() {
-        JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_DIF_3);
+        JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_MORE_3);
 
         assertFalse(response.isValid());
         assertEquals("Abrindo o JWT, o número de claims é diferente de 3.", response.getJustificativa());
+    }
+    @Test
+    void testDif3() {
+        JwtResponseDTO response = jwtValidationService.validateToken(ConstantsTest.TOKEN_DIF_3);
+
+        assertFalse(response.isValid());
+        assertEquals("Alguma claim obrigatória está ausente: Name, Role ou Seed.", response.getJustificativa());
     }
 
     @Test
