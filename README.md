@@ -203,5 +203,3 @@ Este projeto está sob licença MIT.
 
 ---
 
-<img width="1024" height="1536" alt="image" src="https://github.com/user-attachments/assets/9a904afc-81ef-49f7-918a-f0664ef0b0f1" />
-
